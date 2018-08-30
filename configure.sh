@@ -109,11 +109,8 @@ sed -i 's|application/x-python=org.gnome.gedit.desktop|application/x-python=idle
 # Mousepad - LeafPad alternative
 apt-get -yq install mousepad
 
-# XFreeRDP
-apt-get -yq install freerdp-x11
-
 # Tracing tools
-apt-get -yq install ltrace strace
+apt-get -yq install strace # ltrace - package not found anymore
 
 # Eyewitness
 apt-get -yq install eyewitness
@@ -186,7 +183,7 @@ cd ~/Tools
 git clone https://github.com/bitsadmin/revbshell
 
 # Crowbar
-apt-get -yq install openvpn vncviewer freerdp2-x11
+apt-get -yq install openvpn xtightvncviewer freerdp2-x11
 git clone https://github.com/galkan/crowbar
 
 # Dirsearch
@@ -269,16 +266,16 @@ EOT
 
 # Oracle JRE
 cd ~/Downloads
-echo -e "1. Click the Download button for JRE\n2. Download jre-*_linux-x64_bin.tar.gz to the ~/Downloads folder.\nOnce the browser is closed, the installation will continue."
+echo -e "1. Click the Download button for JRE\n2. Download jre-*_linux-x64*.tar.gz to the ~/Downloads folder.\nOnce the browser is closed, the installation will continue."
 firefox http://www.oracle.com/technetwork/java/javase/downloads/
 apt-get -yq install java-package
 mkdir /tmp/jpkg
 chmod 777 /tmp/jpkg
-cp jre-*linux*.tar.gz /tmp/jpkg
+mv jre-*linux*.tar.gz /tmp/jpkg
 cd /tmp/jpkg
 useradd user1
 # Workaround for Java 9: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=876426
-mv jre-*linux*.tar.gz jre-9-linux-x64.tar.gz
+# mv jre-*linux*.tar.gz jre-9-linux-x64.tar.gz
 su -c "cd /tmp/jpkg; echo y|make-jpkg jre-*linux*.tar.gz" user1
 userdel user1
 dpkg -i oracle*java*jre*amd64.deb
