@@ -106,11 +106,14 @@ apt-get -yq install idle
 sed -i 's|text/x-python=org.gnome.gedit.desktop|text/x-python=idle.desktop|g' /usr/share/applications/gnome-mimeapps.list
 sed -i 's|application/x-python=org.gnome.gedit.desktop|application/x-python=idle.desktop|g' /usr/share/applications/gnome-mimeapps.list
 
+# Remove default directories
+rmdir Documents  Music Pictures Public Templates Videos
+
 # Mousepad - LeafPad alternative
 apt-get -yq install mousepad
 
 # Tracing tools
-apt-get -yq install strace # ltrace - package not found anymore
+apt-get -yq install ltrace strace
 
 # Eyewitness
 apt-get -yq install eyewitness
@@ -140,9 +143,9 @@ filetype plugin indent on
 EOL
 # Syntax highlighting
 # > PowerShell
-pushd ~/.vim/bundle 
+mkdir -p ~/.vim/bundle
+cd ~/.vim/bundle
 git clone https://github.com/PProvost/vim-ps1
-popd
 
 # Initialize Metasploit
 update-rc.d postgresql enable
@@ -163,7 +166,7 @@ git clone https://github.com/PowerShellMafia/PowerSploit
 # Empire
 export STAGING_KEY=RANDOM
 git clone https://github.com/EmpireProject/Empire
-pushd ./Empire/setup/ && ./install.sh && popd
+cd ./Empire/setup/ && ./install.sh && cd ../..
 # Nishang
 git clone https://github.com/samratashok/nishang
 # CimSweep
@@ -177,14 +180,27 @@ git clone https://github.com/FuzzySecurity/PowerShell-Suite
 # Autoruns
 git clone https://github.com/p0w3rsh3ll/AutoRuns
 
+# => CSharp
+mkdir ~/Tools/CSharp && cd ~/Tools/CSharp
+# NoPowerShell
+curl -s https://api.github.com/repos/bitsadmin/nopowershell/releases/latest | grep browser_download_url | cut -d '"' -f 4 | wget -i -
+unzip NoPowerShell_trunk.zip -d NoPowerShell
+rm NoPowerShell_trunk.zip
+# SharpUp - TODO: compile
+git clone https://github.com/GhostPack/SharpUp
+# SharpWeb
+wget https://github.com/djhohnstein/SharpWeb/releases/download/v1.2/SharpWeb.exe -O SharpWeb46.exe
+wget https://github.com/djhohnstein/SharpWeb/releases/download/v1.1/SharpWeb.exe -O SharpWeb45.exe
+wget https://github.com/djhohnstein/SharpWeb/releases/download/v1.0/SharpWeb.exe -O SharpWeb20.exe
+# WireTap - TODO: compile
+git clone https://github.com/djhohnstein/WireTap
+# SharpSploit - TODO: compile
+git clone https://github.com/cobbr/SharpSploit
+
 #### Other tools ####
 cd ~/Tools
 # ReVBShell
 git clone https://github.com/bitsadmin/revbshell
-
-# Crowbar
-apt-get -yq install openvpn xtightvncviewer freerdp2-x11
-git clone https://github.com/galkan/crowbar
 
 # Dirsearch
 git clone https://github.com/maurosoria/dirsearch
@@ -194,7 +210,7 @@ git clone https://github.com/fuzzdb-project/fuzzdb
 
 # EmPyre
 git clone https://github.com/adaptivethreat/EmPyre
-pushd ./EmPyre/setup/ && ./install.sh && popd
+cd ./EmPyre/setup/ && ./install.sh && cd ../..
 
 # Shellter binary obfuscator
 wget https://www.shellterproject.com/Downloads/Shellter/Latest/shellter.zip
@@ -204,9 +220,9 @@ rm shellter.zip
 # Windows Exploit Suggester
 git clone https://github.com/GDSSecurity/Windows-Exploit-Suggester
 pip install xlutils
-pushd Windows-Exploit-Suggester
+cd Windows-Exploit-Suggester
 python windows-exploit-suggester.py --update
-popd
+cd ..
 
 # Linux Exploit Suggester
 git clone https://github.com/PenturaLabs/Linux_Exploit_Suggester
@@ -215,23 +231,33 @@ git clone https://github.com/PenturaLabs/Linux_Exploit_Suggester
 git clone https://github.com/pentestmonkey/unix-privesc-check
 
 # Latest impacket tools
-pushd /tmp
+cd /tmp
 git clone https://github.com/CoreSecurity/impacket
-pushd impacket
+cd impacket
 python setup.py install
-popd
-popd
+cd ~
 
 #### Miscellaneous ####
 # Unpack rockyou wordlist
 gzip -d /usr/share/wordlists/rockyou.txt.gz
 
-# Python pwntools
+# TODO: Add additional rules
+#wget http://contest-2010.korelogic.com/rules.txt -O /usr/share/john/korelogic.conf
+
+# TODO: Set rockyou as default password list for John
+# In /etc/john/john.conf
+# Default wordlist file name. Will fall back to standard wordlist if not
+# defined.
+#Wordlist = $JOHN/password.lst
+
+# Python
+pip install --upgrade pip
 pip install pwntools
+pip install beautifulsoup4
 
 # Proper terminal experience
 apt-get -yq install terminator zsh
-sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh); exit"
+sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | grep -v "env zsh -l")"
 # Enable infinite scrollback
 mkdir ~/.config/terminator/
 cat <<EOT > ~/.config/terminator/config
@@ -240,7 +266,7 @@ cat <<EOT > ~/.config/terminator/config
     scrollback_infinite = True
 EOT
 # Disable update check
-sed -i '/source $ZSH\/oh-my-zsh.sh/i \DISABLE_AUTO_UPDATE="true"' ~/.zshrc
+sed -i 's/# DISABLE_AUTO_UPDATE="true"/DISABLE_AUTO_UPDATE="true"/g' ~/.zshrc
 # powerlevel9k theme
 wget https://github.com/powerline/powerline/raw/develop/font/PowerlineSymbols.otf
 mv PowerlineSymbols.otf /usr/share/fonts/X11/misc
@@ -257,7 +283,8 @@ POWERLEVEL9K_TIME_FORMAT='%D{%H:%M}'
 EOT
 # zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
-sed -i 's|^plugins=(.*|plugins=(\n  zsh-autosuggestions|g' ~/.zshrc
+sed -i 's|^plugins=[(]\(\w*\)[)]|plugins=\(\1 zsh-autosuggestions\)|g' ~/.zshrc
+# Ctrl + space for autocomplete
 cat <<EOT >> ~/.zshrc
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 bindkey '^ ' autosuggest-accept
@@ -265,24 +292,12 @@ ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 EOT
 
 # Oracle JRE
-cd ~/Downloads
-echo -e "1. Click the Download button for JRE\n2. Download jre-*_linux-x64*.tar.gz to the ~/Downloads folder.\nOnce the browser is closed, the installation will continue."
-firefox http://www.oracle.com/technetwork/java/javase/downloads/
-apt-get -yq install java-package
-mkdir /tmp/jpkg
-chmod 777 /tmp/jpkg
-mv jre-*linux*.tar.gz /tmp/jpkg
-cd /tmp/jpkg
-useradd user1
-# Workaround for Java 9: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=876426
-# mv jre-*linux*.tar.gz jre-9-linux-x64.tar.gz
-su -c "cd /tmp/jpkg; echo y|make-jpkg jre-*linux*.tar.gz" user1
-userdel user1
-dpkg -i oracle*java*jre*amd64.deb
-mv /usr/bin/java /usr/bin/openjava
-ln -s /usr/lib/jvm/oracle*java*jre*amd64/bin/java /usr/bin/java
-cd ~/Downloads
-rm -rf /tmp/jpkg
+echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" >> /etc/apt/sources.list
+echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu precise main" >> /etc/apt/sources.list
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886
+apt-get update
+echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections
+apt-get -yq install oracle-java8-installer
 
 # Cleanup apt
 apt -yq autoremove
