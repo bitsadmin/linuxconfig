@@ -8,6 +8,9 @@
 # Author:
 #  Arris Huijgen
 #
+# i3wm Contributor:
+#  Roogle
+#
 # Website:
 #  https://github.com/bitsadmin/linuxconfig
 #
@@ -30,34 +33,46 @@ apt-get -yq upgrade
 # Configure NTP
 timedatectl set-timezone Europe/Amsterdam
 
+# Install i3wm
+# TODO
+
+# Install I3wm addons
+# TODO
+
+# Configure i3wm
+# TODO
+
+
+
 # Configure Gnome
 # Disable updates
-gsettings set org.gnome.software download-updates false
+#gsettings set org.gnome.software download-updates false
 # Disable automatic installation of security upgrades
 apt-get -yq purge unattended-upgrades
 # Disable automatic timezone & date/time
-gsettings set org.gnome.desktop.datetime automatic-timezone false
+#gsettings set org.gnome.desktop.datetime automatic-timezone false
 timedatectl set-ntp 0
+
 # Disable lock screen
-gsettings set org.gnome.desktop.session idle-delay 0
-gsettings set org.gnome.desktop.lockdown disable-lock-screen true
-gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-timeout 0
-gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
-gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-timeout 0
-gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-type 'nothing'
+#gsettings set org.gnome.desktop.session idle-delay 0
+#gsettings set org.gnome.desktop.lockdown disable-lock-screen true
+#gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-timeout 0
+#gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
+#gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-timeout 0
+#gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-type 'nothing'
 
 # Disable screensaver
-dconf write /org/gnome/desktop/screensaver/lock-enabled false
+#dconf write /org/gnome/desktop/screensaver/lock-enabled false
 # Configure Alt-Tab behavior
-gnome-shell-extension-tool -e alternate-tab@gnome-shell-extensions.gcampax.github.com
+#gnome-shell-extension-tool -e alternate-tab@gnome-shell-extensions.gcampax.github.com
 # Add shortkey to minimize all windows (Winkey + D)
-gsettings set org.gnome.desktop.wm.keybindings show-desktop "['<Super>d']"
+#gsettings set org.gnome.desktop.wm.keybindings show-desktop "['<Super>d']"
 # Dash-to-dock no autohide
-gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed true
+#gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed true
 
 # Configure Nautilus
-gsettings set org.gnome.nautilus.preferences default-folder-viewer 'list-view'
-gsettings set org.gnome.nautilus.list-view default-zoom-level 'small'
+#gsettings set org.gnome.nautilus.preferences default-folder-viewer 'list-view'
+#gsettings set org.gnome.nautilus.list-view default-zoom-level 'small'
 
 # Install latest Firefox
 wget 'https://download.mozilla.org/?product=firefox-latest-ssl&os=linux64&lang=en-US' -O /tmp/firefox.tar.bz2
@@ -93,13 +108,18 @@ pref("toolkit.telemetry.reportingpolicy.firstRun", false);
 pref("browser.startup.homepage", "about:blank");
 EOT
 
+
+# install wabppalizer
+
+# install hackbar
+
 # Install FoxyProxy
 wget https://addons.mozilla.org/firefox/downloads/latest/foxyproxy-standard/addon-2464-latest.xpi -O /tmp/addon-2464-latest.xpi
 mkdir /usr/lib/firefox/browser/extensions
 unzip /tmp/addon-2464-latest.xpi -d /usr/lib/firefox/browser/extensions/foxyproxy@eric.h.jung
 
 # Add to Gnome Favorites
-gsettings set org.gnome.shell favorite-apps "['terminator.desktop', 'firefox.desktop', 'kali-burpsuite.desktop', 'org.gnome.Nautilus.desktop', 'mousepad.desktop', 'gnome-system-monitor.desktop']"
+# gsettings set org.gnome.shell favorite-apps "['terminator.desktop', 'firefox.desktop', 'kali-burpsuite.desktop', 'org.gnome.Nautilus.desktop', 'mousepad.desktop', 'gnome-system-monitor.desktop']"
 
 # IDLE Python as default editor
 apt-get -yq install idle
