@@ -3,7 +3,7 @@
 # This software is provided under under the BSD 3-Clause License.
 # See the accompanying LICENSE file for more information.
 #
-# Configure Kali for stealhy use in Red Team Operations while recording all actions performed
+# Configure Kali for stealhy use in Red Team Operations recording all actions performed
 #
 # Author:
 #  Arris Huijgen
@@ -15,10 +15,12 @@
 # Install asciinema
 apt -y install python3-pip
 pip3 install asciinema
+mkdir ~/Logging/
 cat <<EOT >> ~/.zshrc
-if [[ -z \$ASCIINEMA_REC ]] && ! [ -e "/tmp/no_asciinema" ]; then
-    md \$HOME/Logging/\$(date +"%Y%m%d")/Terminal/
-    asciinema rec -w 2 \$HOME/Logging/\$(date +"%Y%m%d")/Terminal/\$(date +"%Y%m%d_%H%M%S")_shell.json
+if [[ -z $ASCIINEMA_REC ]] && ! [ -e "/tmp/no_asciinema" ]; then
+    mkdir -p $HOME/Logging/$(date +"%Y%m%d")/Terminal/
+    export ASCIINEMA_REC=1
+    asciinema rec $HOME/Logging/$(date +"%Y%m%d")/Terminal/$(date +"%Y%m%d_%H%M%S")_shell.json
     exit
 fi
 EOT
