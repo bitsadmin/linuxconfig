@@ -1,0 +1,5 @@
+alias connect-vpn="pushd ~/VPN/; openvpn --config lab-connection.conf; popd"
+alias c_olly="ssh -loffsec -N -L 3389:192.168.99.158:3389 192.168.99.118"
+alias c_gre="ssh -loffsec -N -L 3389:10.200.0.118:3389 192.168.99.118"
+alias rdp_vista="rdesktop -u offsec -p lab -g 1600x900 127.0.0.1"
+alias rdp_srv="rdesktop -u administrator -p lab -g 1600x900 192.168.99.188"

@@ -62,3 +62,20 @@ srv_smb() {
 	echo "Sharing current directory on \\\\$LHOST\\Share\\"
 	python /usr/share/doc/python-impacket/examples/smbserver.py -comment 'My share' Share ./
 }
+
+srv_webdav {
+    if [[ ! -z $1 && ($1 = "--help" || $1 = "-h") ]]
+	then
+        echo "Launch WebDAV server in current directory"
+		echo "Usage: srv_webdav [optional: [port, default: 80]]"
+		return -1
+	fi
+
+	local PORT=80
+	if [ ! -z $1 ]
+	then
+		PORT=$1
+	fi
+	
+	wsgidav --host 0.0.0.0 --port $PORT --auth anonymous --root ./
+}
