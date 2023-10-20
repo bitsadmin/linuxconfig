@@ -33,6 +33,8 @@ timedatectl set-timezone Europe/Amsterdam
 # Configure Gnome
 # Disable updates
 gsettings set org.gnome.software download-updates false
+gsettings set org.gnome.software allow-updates false
+gsettings set org.gnome.software download-updates-notify false
 # Disable automatic installation of security upgrades
 apt-get -yq purge unattended-upgrades
 # Disable automatic timezone & date/time
@@ -91,6 +93,7 @@ pref("general.warnOnAboutConfig", false);
 pref("signon.rememberSignons", false);
 pref("toolkit.telemetry.reportingpolicy.firstRun", false);
 pref("browser.startup.homepage", "about:blank");
+pref("network.captive-portal-service.enabled", false);
 EOT
 
 # Install FoxyProxy
@@ -179,6 +182,8 @@ git clone https://github.com/giMini/PowerMemory
 git clone https://github.com/FuzzySecurity/PowerShell-Suite
 # Autoruns
 git clone https://github.com/p0w3rsh3ll/AutoRuns
+# Powermad
+git clone https://github.com/Kevin-Robertson/Powermad
 
 # => CSharp
 mkdir ~/Tools/CSharp && cd ~/Tools/CSharp
@@ -199,6 +204,9 @@ git clone https://github.com/cobbr/SharpSploit
 
 #### Other tools ####
 cd ~/Tools
+# TopPorts
+wget https://raw.githubusercontent.com/bitsadmin/nmappy/master/topports.py
+
 # ReVBShell
 git clone https://github.com/bitsadmin/revbshell
 
@@ -253,6 +261,7 @@ gzip -d /usr/share/wordlists/rockyou.txt.gz
 # Python
 pip install --upgrade pip
 pip install pwntools
+echo never > /root/.pwntools-cache/update
 pip install beautifulsoup4
 
 # Proper terminal experience
@@ -283,6 +292,7 @@ POWERLEVEL9K_TIME_FORMAT='%D{%H:%M}'
 EOT
 # zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 sed -i 's|^plugins=[(]\(\w*\)[)]|plugins=\(\1 zsh-autosuggestions\)|g' ~/.zshrc
 # Ctrl + space for autocomplete
 cat <<EOT >> ~/.zshrc
@@ -291,13 +301,15 @@ bindkey '^ ' autosuggest-accept
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 EOT
 
+# TODO: Fix
 # Oracle JRE
-echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" >> /etc/apt/sources.list
-echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu precise main" >> /etc/apt/sources.list
-apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886
-apt-get update
-echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections
-apt-get -yq install oracle-java8-installer
+#echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" >> /etc/apt/sources.list
+#echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu precise main" >> /etc/apt/sources.list
+#apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886
+#apt-get update
+#echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections
+#apt-get -yq install oracle-java8-installer
+#apt-get -yq install oracle-java8-set-default
 
 # Cleanup apt
 apt -yq autoremove
